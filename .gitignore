@@ -1,0 +1,9 @@
+*.pyc
+*.DS_Store
+*.un~
+data/
+static/
+.ipynb*e
+config.py
+db_repository/
+*.db

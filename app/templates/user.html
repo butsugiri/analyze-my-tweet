@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<h2>@{{current_user.nickname}}の最新{{ numberOfTweet }}件のTweetの解析結果</h2>
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-xs-6'>
+            <p>月別のTweet数の推移</p>
+            <div id={{ chartInfo["chartID"]|safe }} class="chart" style="height: 400px; width: 500px"></div>
+            <script>
+                var chart_id = {{ chartInfo["chartID"]|safe }};
+                var series = {{ chartInfo["series"]|safe }};
+                var title = {{ chartInfo["title"]|safe }};
+                var xAxis = {{ chartInfo["xAxis"]|safe }};
+                var yAxis = {{ chartInfo["yAxis"]|safe }};
+                var chart = {{ chartInfo["chart"]|safe }};
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $(chart_id).highcharts({
+                        chart: chart,
+                        title: title,
+                        xAxis: xAxis,
+                        yAxis: yAxis,
+                        series: series,
+                        legend: {enabled:false}
+                    });
+                });
+            </script>
+        </div>
+        <div class='col-xs-6'>
+            <p>使用クライアントの分布</p>
+            <div id={{ pieInfo["chartID"]|safe }} class="chart" style="height: 400px; width: 500px"></div>
+            <script>
+                var pie_id = {{ pieInfo["chartID"]|safe }};
+                var series2 = {{ pieInfo["series"]|safe }};
+                var title2 = {{ pieInfo["title"]|safe }};
+                var chart2 = {{ pieInfo["chart"]|safe }};
+                var tooltip = {{ pieInfo["tooltip"]|safe }};
+                var plotOptions = {{ pieInfo["plotOptions"]|safe }};
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $(pie_id).highcharts({
+                        chart: chart2,
+                        title: title2,
+                        series: series2,
+                        tooltip:tooltip,
+                        plotOptions: plotOptions
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-xs-6'>
+            <p>Tweet中の頻出名詞とその回数</p>
+            <table class='table table-striped table-bordered'>
+                <tr>
+                    <th>名詞</th>
+                    <th>登場回数</th>
+                </tr>
+                {% for key, value in noun_count %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class='col-xs-6'>
+            <p>頻繁にリプライをする相手</p>
+            <table class='table table-striped table-bordered'>
+                <tr>
+                    <th>リプライしたID</th>
+                    <th>リプライ回数</th>
+                </tr>
+                {% for key, value in at_id_count %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
